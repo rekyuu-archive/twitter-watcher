@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: ./api
+    restart: always
+    ports:
+      - "5080:5080"
+    volumes:
+      - ./data:/usr/src/twitter-watcher-api/data
+    env_file:
+      - secrets.env
+
+  watcher:
+    build:
+      context: ./watcher
+    restart: always
+    environment:
+      - API_URL=http://api:5080
+    env_file:
+      - secrets.env

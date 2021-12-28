@@ -1,0 +1,5 @@
+/target
+/api/data
+secrets.env
+/data
+/.idea
