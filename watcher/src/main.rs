@@ -27,7 +27,7 @@ async fn main() -> Result<(), reqwest::Error> {
 
             if artist.media.len() > 0 {
                 for tweet_id in artist.media {
-                    let twitter_url = format!("https://twitter.com/{}/status/{}", artist.artist.twitter_username, tweet_id);
+                    let twitter_url = format!("https://fxtwitter.com/{}/status/{}", artist.artist.twitter_username, tweet_id);
 
                     send_telegram_message(&client, twitter_url.as_str()).await?;
                 }
