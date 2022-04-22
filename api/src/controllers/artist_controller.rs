@@ -110,12 +110,18 @@ async fn create_artist(_token: AccessToken, db: Db, url: &str) -> Result<Created
 
     let twitter_account = twitter_api::get_account_by_name(String::from(username)).await;
     let media_tweets = twitter_api::get_user_media_tweets(twitter_account.id, None).await;
-    let last_media_tweet_id = media_tweets.last().unwrap();
+
+    let last_processed_tweet_id: u64;
+    if media_tweets.is_empty() {
+        last_processed_tweet_id = twitter_api::get_last_tweet(twitter_account.id).await;
+    } else {
+        last_processed_tweet_id = *media_tweets.last().unwrap()
+    }
 
     let artist = Artist {
         twitter_id: Option::from(twitter_account.id as i64),
         twitter_username: String::from(username),
-        last_processed_tweet_id: Option::from(last_media_tweet_id.clone() as i64)
+        last_processed_tweet_id: Option::from(last_processed_tweet_id.clone() as i64)
     };
 
     let artist_values = artist.clone();

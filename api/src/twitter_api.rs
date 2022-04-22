@@ -44,6 +44,16 @@ pub async fn get_user_media_tweets(user_id: u64, since_id: Option<u64>) -> Vec<u
     return media_tweets;
 }
 
+/// Gets the most recent tweet from the specified user.
+pub async fn get_last_tweet(user_id: u64) -> u64 {
+    let token = get_token();
+
+    let timeline = egg_mode::tweet::user_timeline(user_id, false, false, &token).with_page_size(100);
+    let (timeline, _feed) = timeline.older(None).await.unwrap();
+
+    return timeline.max_id.unwrap();
+}
+
 /// Creates a Twitter API token.
 fn get_token() -> Token {
     let config = Config::new();
